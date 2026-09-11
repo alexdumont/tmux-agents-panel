@@ -72,15 +72,18 @@ Add to your tmux status line:
 set -g status-right "#(~/.tmux/plugins/tmux-agents-panel/scripts/statusline.sh) | %H:%M"
 ```
 
-Output example: `🤖 3 2W 1I`
+Output example: `🤖 3 2W 1T 1A 0I`
 
 ## Agent status detection
 
-| Status | Condition |
-|---|---|
-| **Working** | Claude has active child processes (running shell commands, tools) |
-| **Thinking** | CPU usage > 5% but no child processes (LLM inference in progress) |
-| **Idle** | Low CPU, no children (waiting for user input) |
+| Badge | Status | Condition |
+|---|---|---|
+| `● WORKING` | Working | Claude has active child processes (running shell commands, tools) |
+| `◉ THINKING` | Thinking | CPU usage > 5%, no child processes (LLM inference in progress) |
+| `⏸ WAITING APPROVAL` | Waiting Approval | Low CPU, no children + approval/confirmation prompt detected in the agent's terminal |
+| `○ IDLE` | Idle | Low CPU, no children, no prompt visible (awaiting next user message) |
+
+Approval detection reads the last 8 lines of the agent's tmux pane and matches patterns such as `[y/n]`, `Allow?`, `press enter`, `(y/n)`, etc. Falls back to **Idle** if the agent is not running inside a tmux pane.
 
 ## File layout
 
