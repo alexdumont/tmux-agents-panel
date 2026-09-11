@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Status line component for tmux-claude-agents plugin
+# Status line component for tmux-agents-panel plugin
 # Usage: add to tmux status-right:
-#   set -g status-right "#{?#{!=:#{@claude-agents-status},},#(~/.tmux/plugins/tmux-claude-agents/scripts/statusline.sh),}"
+#   set -g status-right "#{?#{!=:#{@claude-agents-status},},#(~/.tmux/plugins/tmux-agents-panel/scripts/statusline.sh),}"
 # Or simply:
 #   set -g status-right "#(path/to/statusline.sh) | %H:%M"
 

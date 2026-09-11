@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Core agent detection script for tmux-claude-agents plugin
+# Core agent detection script for tmux-agents-panel plugin
 
 SESSIONS_DIR="${CLAUDE_CONFIG_DIR:-$HOME/.claude}/sessions"
 

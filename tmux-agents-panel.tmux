@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# tmux-claude-agents — TPM-compatible entry point
+# tmux-agents-panel — TPM-compatible entry point
 # Tracks Claude Code agent sessions: status, working directory, uptime.
 #
 # Options (set in tmux.conf before loading plugin):

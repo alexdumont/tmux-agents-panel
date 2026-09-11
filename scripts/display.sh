@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Display panel for tmux-claude-agents plugin
+# Display panel for tmux-agents-panel plugin
 # Run inside a tmux pane; use `watch` or loop for live updates.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

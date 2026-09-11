@@ -44,7 +44,7 @@ else
         "bash '$DISPLAY_SCRIPT'" 2>/dev/null)
 
     if [[ -z "$new_pane" ]]; then
-        tmux display-message "tmux-claude-agents: failed to create pane"
+        tmux display-message "tmux-agents-panel: failed to create pane"
         exit 1
     fi
 

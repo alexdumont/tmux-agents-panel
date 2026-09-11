@@ -40,7 +40,7 @@ git clone https://github.com/alexdumont/tmux-agents-panel ~/.tmux/plugins/tmux-a
 Add to `~/.tmux.conf`:
 
 ```tmux
-run '~/.tmux/plugins/tmux-agents-panel/tmux-claude-agents.tmux'
+run '~/.tmux/plugins/tmux-agents-panel/tmux-agents-panel.tmux'
 ```
 
 ## Usage
@@ -118,7 +118,7 @@ The plugin scans that directory, verifies each PID is still alive, and reads the
 
 ```
 tmux-agents-panel/
-├── tmux-claude-agents.tmux    # TPM entry point
+├── tmux-agents-panel.tmux    # TPM entry point
 └── scripts/
     ├── agents.sh              # Agent discovery, status detection, helpers
     ├── display.sh             # Flicker-free pane renderer (buffered loop)
