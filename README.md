@@ -1,4 +1,4 @@
-# tmux-claude-agents
+# tmux-agents-panel
 
 A tmux plugin that opens a live panel showing all running Claude Code agents — their status (Working / Thinking / Idle), working directory, uptime, and tmux pane location.
 
@@ -24,7 +24,7 @@ A tmux plugin that opens a live panel showing all running Claude Code agents —
 Add to `~/.tmux.conf`:
 
 ```tmux
-set -g @plugin 'your-user/tmux-claude-agents'
+set -g @plugin 'alexdumont/tmux-agents-panel'
 ```
 
 Then press `prefix + I` to install.
@@ -32,9 +32,9 @@ Then press `prefix + I` to install.
 ### Manual
 
 ```bash
-git clone https://github.com/your-user/tmux-claude-agents ~/.tmux/plugins/tmux-claude-agents
+git clone https://github.com/alexdumont/tmux-agents-panel ~/.tmux/plugins/tmux-agents-panel
 # Add to ~/.tmux.conf:
-run '~/.tmux/plugins/tmux-claude-agents/tmux-claude-agents.tmux'
+run '~/.tmux/plugins/tmux-agents-panel/tmux-agents-panel.tmux'
 ```
 
 ## Usage
@@ -69,7 +69,7 @@ set -g @claude-agents-size "50"
 Add to your tmux status line:
 
 ```tmux
-set -g status-right "#(~/.tmux/plugins/tmux-claude-agents/scripts/statusline.sh) | %H:%M"
+set -g status-right "#(~/.tmux/plugins/tmux-agents-panel/scripts/statusline.sh) | %H:%M"
 ```
 
 Output example: `🤖 3 2W 1I`
@@ -85,8 +85,8 @@ Output example: `🤖 3 2W 1I`
 ## File layout
 
 ```
-tmux-claude-agents/
-├── tmux-claude-agents.tmux   # TPM entry point
+tmux-agents-panel/
+├── tmux-agents-panel.tmux   # TPM entry point
 ├── scripts/
 │   ├── agents.sh             # Agent detection & helpers
 │   ├── display.sh            # Pane renderer (live loop)
