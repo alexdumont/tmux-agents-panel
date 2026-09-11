@@ -41,10 +41,9 @@ run '~/.tmux/plugins/tmux-claude-agents/tmux-claude-agents.tmux'
 
 | Keybinding | Action |
 |---|---|
-| `prefix + A` | Open live agents panel (auto-refreshes) |
-| `prefix + shift+A` | Open one-shot snapshot (press any key to close) |
-| `q` (inside panel) | Quit panel |
-| `r` (inside panel) | Force refresh |
+| `prefix + A` | Toggle persistent agents pane (create or kill) |
+| `q` (inside pane) | Close the agents pane |
+| `r` (inside pane) | Force refresh |
 
 ## Configuration
 
@@ -54,9 +53,11 @@ run '~/.tmux/plugins/tmux-claude-agents/tmux-claude-agents.tmux'
 # Keybinding to open the panel (default: A)
 set -g @claude-agents-key "A"
 
-# Popup dimensions
-set -g @claude-agents-popup-width  "70%"
-set -g @claude-agents-popup-height "80%"
+# Pane position: right (default) | left | top | bottom
+set -g @claude-agents-position "right"
+
+# Pane size: columns for right/left, lines for top/bottom (default: 50)
+set -g @claude-agents-size "50"
 
 # Refresh interval in seconds (default: 2)
 # Set in your environment:
@@ -88,7 +89,8 @@ tmux-claude-agents/
 ├── tmux-claude-agents.tmux   # TPM entry point
 ├── scripts/
 │   ├── agents.sh             # Agent detection & helpers
-│   ├── display.sh            # Interactive panel renderer
+│   ├── display.sh            # Pane renderer (live loop)
+│   ├── toggle.sh             # Create/kill the persistent pane
 │   ├── keybindings.sh        # Tmux key binding setup
 │   └── statusline.sh         # Compact status bar widget
 └── README.md
