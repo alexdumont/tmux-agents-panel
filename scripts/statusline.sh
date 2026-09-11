@@ -20,20 +20,24 @@ fi
 
 working=0
 thinking=0
+waiting=0
 idle=0
 
 for entry in "${agents[@]}"; do
     local_pid="${entry%%:*}"
-    status=$(get_agent_status "$local_pid")
+    pane_row=$(get_tmux_pane "$local_pid")
+    pane_id="${pane_row%% *}"
+    status=$(get_agent_status "$local_pid" "$pane_id")
     case "$status" in
-        working)  (( working++ )) ;;
-        thinking) (( thinking++ )) ;;
-        idle)     (( idle++ )) ;;
+        working)          (( working++ )) ;;
+        thinking)         (( thinking++ )) ;;
+        waiting_approval) (( waiting++ )) ;;
+        idle)             (( idle++ )) ;;
     esac
 done
 
 # Compact status for tmux status bar
-# Format: 🤖 2W 1T 0I  (Working / Thinking / Idle)
+# Format: 🤖 2W 1T 1A 0I  (Working / Thinking / Approval / Idle)
 out=" 🤖 ${total}"
 
 if [[ "$working" -gt 0 ]]; then
@@ -41,6 +45,9 @@ if [[ "$working" -gt 0 ]]; then
 fi
 if [[ "$thinking" -gt 0 ]]; then
     out+=" #[fg=yellow]${thinking}T#[default]"
+fi
+if [[ "$waiting" -gt 0 ]]; then
+    out+=" #[fg=magenta]${waiting}A#[default]"
 fi
 if [[ "$idle" -gt 0 ]]; then
     out+=" ${idle}I"

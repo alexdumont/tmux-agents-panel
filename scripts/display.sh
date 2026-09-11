@@ -50,8 +50,14 @@ print_agent_card() {
     started=$(_session_field "$session_file" startedAt)
     kind=$(_session_field "$session_file" kind)
 
+    # Resolve tmux pane once — used for both status detection and display
+    local pane_row pane_id pane_label
+    pane_row=$(get_tmux_pane "$pid")
+    pane_id="${pane_row%% *}"                 # first field: %3
+    pane_label="${pane_row#* }"               # remaining:   1:0 zsh
+
     local status
-    status=$(get_agent_status "$pid")
+    status=$(get_agent_status "$pid" "$pane_id")
 
     local uptime=""
     [[ -n "$started" ]] && uptime=$(human_uptime "$started")
@@ -60,9 +66,6 @@ print_agent_card() {
     short_cwd=$(short_path "$cwd" 50)
 
     local short_id="${session_id:0:8}"
-
-    local tmux_loc
-    tmux_loc=$(get_tmux_location "$pid")
 
     # Card top border
     echo -e "  ${BLUE}┌─────────────────────────────────────────────────────────┐${RESET}"
@@ -82,8 +85,8 @@ print_agent_card() {
     printf "  \e[0;34m│\e[0m  \e[0;90mUptime   \e[0m  %s   \e[0;90m[%s]\e[0m\n" "$uptime" "$kind"
 
     # Tmux location
-    if [[ -n "$tmux_loc" ]]; then
-        printf "  \e[0;34m│\e[0m  \e[0;90mTmux     \e[0m  %s\n" "$tmux_loc"
+    if [[ -n "$pane_label" ]]; then
+        printf "  \e[0;34m│\e[0m  \e[0;90mTmux     \e[0m  %s\n" "$pane_label"
     fi
 
     echo -e "  ${BLUE}└─────────────────────────────────────────────────────────┘${RESET}"
@@ -93,8 +96,8 @@ print_agent_card() {
 # ────────────────────────── summary bar ──────────────────────────
 
 print_summary() {
-    local total="$1" working="$2" thinking="$3" idle="$4"
-    echo -e "  ${GRAY}Total: ${BOLD}${total}${RESET}  ${GRAY}|  ${GREEN}${BOLD}Working: ${working}${RESET}  ${GRAY}|  ${YELLOW}${BOLD}Thinking: ${thinking}${RESET}  ${GRAY}|  Idle: ${idle}${RESET}"
+    local total="$1" working="$2" thinking="$3" waiting="$4" idle="$5"
+    echo -e "  ${GRAY}Total: ${BOLD}${total}${RESET}  ${GRAY}|  ${GREEN}${BOLD}Working: ${working}${RESET}  ${GRAY}|  ${YELLOW}${BOLD}Thinking: ${thinking}${RESET}  ${GRAY}|  \033[0;35m${BOLD}Approval: ${waiting}${RESET}  ${GRAY}|  Idle: ${idle}${RESET}"
     hr "─"
 }
 
@@ -123,25 +126,32 @@ render() {
         center "${GRAY}Start a Claude Code session to see it here.${RESET}"
         echo ""
     else
-        local total=0 working=0 thinking=0 idle=0
+        local total=0 working=0 thinking=0 waiting=0 idle=0
 
         for entry in "${agents[@]}"; do
             local pid="${entry%%:*}"
             local session_file="${entry#*:}"
+
+            # Resolve pane once per agent (shared with card render)
+            local pane_row pane_id
+            pane_row=$(get_tmux_pane "$pid")
+            pane_id="${pane_row%% *}"
+
             local status
-            status=$(get_agent_status "$pid")
+            status=$(get_agent_status "$pid" "$pane_id")
 
             (( total++ ))
             case "$status" in
-                working)  (( working++ )) ;;
-                thinking) (( thinking++ )) ;;
-                idle)     (( idle++ )) ;;
+                working)          (( working++ )) ;;
+                thinking)         (( thinking++ )) ;;
+                waiting_approval) (( waiting++ )) ;;
+                idle)             (( idle++ )) ;;
             esac
 
             print_agent_card "$pid" "$session_file"
         done
 
-        print_summary "$total" "$working" "$thinking" "$idle"
+        print_summary "$total" "$working" "$thinking" "$waiting" "$idle"
     fi
 
     print_footer
