@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Set up key bindings for tmux-claude-agents plugin
+# Set up key bindings for tmux-agents-panel plugin
 
 PLUGIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 TOGGLE_SCRIPT="$PLUGIN_DIR/scripts/toggle.sh"
